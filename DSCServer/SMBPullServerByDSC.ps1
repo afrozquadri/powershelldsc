@@ -2,16 +2,16 @@
 Find-Module xsmbshare | Install-Module
 Find-Module xnetworking | Install-Module
 Find-Module cNtfsAccessControl | Install-Module
+Import-Module xPSDesiredStateConfiguration
 
 $configData = @{
     AllNodes=@(
     @{
-        NodeName="Powershell-dsc"
+        NodeName="$Env:COMPUTERNAME"
         CertificateFile = "$cert.path"
         Thumbprint = "$Cert.thumbprint"
         Path = "C:\DscSmbShare"
         ShareName = "DSCConfig"
-        SourcePath = "C:\DSCResourceZip"
         ReadAccess = "Everyone"
         FullAccess = "Administrators"  
      }
@@ -71,3 +71,18 @@ mkdir C:\smbpullserverconfig
 SmbShare -OutputPath C:\smbpullserverconfig -ConfigurationData $configData
 
 Start-DscConfiguration -Path C:\smbpullserverconfig -Wait -Verbose
+
+
+#copy all modules in shared folder in zip foramt
+
+$Allmodules = Get-Module -ListAvailable| ?{$_.tags -contains "dsc"}
+
+foreach ($Module in $Allmodules)
+{
+    #$Module.name
+   # $Module.Modulebase
+  Publish-ModuleToPullServer -Name $Module.name -ModuleBase $Module.Modulebase -OutputFolderPath $($configData.AllNodes.path) -Version $Module.Version -Verbose
+
+}
+
+
