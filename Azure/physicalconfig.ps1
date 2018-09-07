@@ -89,10 +89,10 @@ Configuration DscMetaConfigs
  # NOTE: DSC Node Configuration names are case sensitive in the portal.
  # TODO: edit the below as needed for your use case
 $Params = @{
-     RegistrationUrl = 'https://sea-agentservice-prod-1.azure-automation.net/accounts/fb2f2856-8d77-4696-8688-ce195f43f65b';
-     RegistrationKey = '8P5qRnEJ/78SkzgL1rAVvJJRIRG59hzGP1t87waBNvLdUdXMswaX8YRJghUSeshrqCZxAp0TUlZoXpbJtaKVZQ==';
+     RegistrationUrl = 'https://sea-agentservice-prod-1.azure-automation.net/accounts/642564b7-06c1-4044-89b6-5fc620289738';
+     RegistrationKey = 'VxcX3Y1hMf6QzuheeCxc1lurHWlmfmwaBPgX1h5ccFeH5hlRFCeXpUoJgAgMX8I+cD1ITpTGXuS/rZgr3hhO4A==';
      ComputerName = @('localhost');
-     NodeConfigurationName = 'service.localhost';
+     NodeConfigurationName = 'azuredscdinesh.localhost';
      RefreshFrequencyMins = 30;
      ConfigurationModeFrequencyMins = 15;
      RebootNodeIfNeeded = $False;
@@ -106,4 +106,4 @@ $Params = @{
 DscMetaConfigs @Params
 
 
-Set-DscLocalConfigurationManager -Path C:\Users\g559871\powershelldsc\Azure\DscMetaConfigs\localhost.meta.mof -ComputerName testserver1
+Set-DscLocalConfigurationManager -Path .\DscMetaConfigs #-ComputerName "vl-srv-gen-0349.genmills.com"
