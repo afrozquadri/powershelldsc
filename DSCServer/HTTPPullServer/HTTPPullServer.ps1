@@ -10,7 +10,7 @@ Ideally, some means of generating a certificate, to secure credentials passed to
 
 Find-Module xPSDesiredStateConfiguration | Install-Module
 
-$PSrootfolder="C:\powershell\powershelldsc"
+$PSrootfolder="C:\powershelldsc\powershelldsc"
 
 $ModuleNames = @(
                     @{Name="Psdesiredstateconfiguration"; version="1.1" },
@@ -29,7 +29,7 @@ foreach($module in $ModuleNames)
         Write-Host "$($module.name) is not available"
 
         Find-Module -Name $module.name -RequiredVersion $module.version | Install-Module 
-
+        
     }
 }
 
@@ -81,7 +81,7 @@ configuration DSCPullServerConfig
             RegistrationKeyPath     = "$env:PROGRAMFILES\WindowsPowerShell\DscService"
             AcceptSelfSignedCertificates = $true
             Enable32BitAppOnWin64   = $false
-            UseSecurityBestPractices = $true
+            UseSecurityBestPractices = $false
         }
 
         File RegistrationKeyFile
@@ -97,8 +97,18 @@ configuration DSCPullServerConfig
 
 DSCPullServerConfig -OutputPath C:\HTTPPullServerconfig -certificateThumbPrint $Cert.Thumbprint -RegistrationKey $registrationkey
 
-Start-DscConfiguration -Path C:\HTTPPullServerconfig -wait -Verbose
-Get-DscConfiguration -CimSession localhost -Verbose
+Start-DscConfiguration -Path C:\HTTPPullServerconfig -wait -Verbose -Force
+
+if ($credential -eq $null)
+{
+$credential=get-credential
+}
+
+
+$cimsessionoption = New-CimSessionOption -SkipCACheck -SkipCNCheck 
+$cimsession = New-CimSession -ComputerName $($env:COMPUTERNAME) -SessionOption $cimsessionoption -Port 5986 -Credential $credential
+
+#Get-DscConfiguration -CimSession $cimsession -Verbose
 
 
 

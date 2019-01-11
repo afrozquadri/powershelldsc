@@ -4,10 +4,10 @@ $dscserver = $env:COMPUTERNAME
 
 $ClientConfig ="C:\Clientconfig"
 
-$secpasswd = ConvertTo-SecureString "123#ntms123#" -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential ("dscclientadmin", $secpasswd)
+$secpasswd = ConvertTo-SecureString "dineshSRV@123" -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential ("administrator", $secpasswd)
 
-$client="DSCClient"
+$client=$($env:COMPUTERNAME)
 $cimSessionOption = New-CimSessionOption -UseSsl -SkipCACheck -SkipCNCheck
 $cimSession = New-CimSession -SessionOption $cimSessionOption -ComputerName $client -Port 5986  -Credential $Cred -Verbose
 
